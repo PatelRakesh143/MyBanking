@@ -12,10 +12,14 @@ class InsufficientFundsException extends Exception {
 class Account {
     private String accountNumber;
     private double balance;
+    private double interestRate; // Annual interest rate (e.g., 0.05 for 5%)
+    private List<Transaction> transactions; // Assuming you have a Transactions class
 
-    public Account(String accountNumber) {
+    public Account(String accountNumber,double interestRate) {
         this.accountNumber = accountNumber;
         this.balance = 0.0;
+        this.interestRate = interestRate;
+        this.transactions = new ArrayList<>();
     }
 
     public String getAccountNumber() {
@@ -24,6 +28,16 @@ class Account {
 
     public double getBalance() {
         return balance;
+    }
+
+    public double getInterestRate() {
+        return interestRate;
+    }
+    public void setInterestRate(double interestRate) {
+        this.interestRate = interestRate;
+    }
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
     public void deposit(double amount) {
@@ -35,6 +49,13 @@ class Account {
             balance -= amount;
         } else {
             throw new InsufficientFundsException("Insufficient funds in the account.");
+        }
+         public void calculateInterest(int months) {
+        double monthlyInterestRate = interestRate / 12; // Monthly interest rate
+        for (int i = 0; i < months; i++) {
+            double monthlyInterest = balance * monthlyInterestRate;
+            balance += monthlyInterest;
+            transactions.add(new Transaction("Interest Credit", monthlyInterest));
         }
     }
 }
@@ -52,7 +73,8 @@ public class BankApplication {
             System.out.println("2. Deposit");
             System.out.println("3. Withdraw");
             System.out.println("4. Display Account Information");
-            system.out.println("5. displayMiniStatement");//display ministatment
+            System.out.println("5. displayMiniStatement");//display ministatment
+            System.out.println("6.interest calculation ");//calculate interestrate
             System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
 
@@ -77,6 +99,9 @@ public class BankApplication {
                         displayMiniStatement();
                         break;
                     case 6:
+                        interestCalculation();
+                        break;
+                    case 7:
                         exit = true;
                         break;
                     default:
@@ -159,6 +184,18 @@ public class BankApplication {
             }
         }
     }
+private static void calculateInterest() {
+        System.out.print("Enter account number: ");
+        String accountNumber = scanner.nextLine();
+        Account account = findAccount(accountNumber);
+
+        if (account != null) {
+            System.out.print("Enter the number of months to calculate interest: ");
+            int months = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+            account.calculateInterest(months);
+            System.out.println("Interest calculation successful.");
+        }
 }
 
 
