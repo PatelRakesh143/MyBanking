@@ -52,6 +52,7 @@ public class BankApplication {
             System.out.println("2. Deposit");
             System.out.println("3. Withdraw");
             System.out.println("4. Display Account Information");
+            system.out.println("5. displayMiniStatement");//display ministatment
             System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
 
@@ -73,6 +74,9 @@ public class BankApplication {
                         displayAccountInfo();
                         break;
                     case 5:
+                        displayMiniStatement();
+                        break;
+                    case 6:
                         exit = true;
                         break;
                     default:
@@ -136,6 +140,27 @@ public class BankApplication {
             System.out.println("Balance: " + account.getBalance());
         }
     }
+    private static void displayMiniStatement() {
+    System.out.print("Enter account number: ");
+    String accountNumber = scanner.nextLine();
+    Account account = findAccount(accountNumber);
+
+    if (account != null) {
+        List<Transaction> transactions = account.getTransactions();
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions found for this account.");
+        } else {
+            System.out.println("Mini-Statement for Account Number: " + account.getAccountNumber());
+            for (Transaction transaction : transactions) {
+                System.out.println("Timestamp: " + transaction.getTimestamp());
+                System.out.println("Description: " + transaction.getDescription());
+                System.out.println("Amount: " + transaction.getAmount());
+                System.out.println();
+            }
+        }
+    }
+}
+
 
     private static Account findAccount(String accountNumber) {
         for (Account account : accounts) {
